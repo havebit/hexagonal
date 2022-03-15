@@ -1,7 +1,16 @@
-# Go Basic
+# Hexagonal Architecture in Go
 
-*Instructor*: `Pallat Anchaleechamaikorn`
-*github*: https://github.com/pallat
+**Instructor**: `Pallat Anchaleechamaikorn`
+**github**: https://github.com/pallat
+**dev.to**: https://dev.to/pallat
+
+## About this repo
+
+This repository is my materials to teach about how to write Go
+in Hexagonal Architecture.
+I make this class to make understanding not just following.
+But if you are a newbie in Go, please make your Go code simple.
+No need any architectural in Go at all, feel free to design what you want.
 
 ## How to run the deck
 
@@ -15,12 +24,6 @@ npm install -g @marp-team/marp-cli
 
 ```sh
 marp -s ./deck
-```
-
-## Lab Guideline
-
-```sh
-git switch -c Your_Name
 ```
 
 ## git commands

@@ -37,6 +37,7 @@ https://github.com/pallat
 
 https://go.dev/tour
 https://github.com/uber-go/guide
+https://dev.to/pallat
 
 ---
 
