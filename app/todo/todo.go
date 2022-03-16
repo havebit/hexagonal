@@ -1,6 +1,7 @@
 package todo
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -17,12 +18,17 @@ func (Todo) TableName() string {
 	return "todos"
 }
 
-type TodoHandler struct {
-	db *gorm.DB
+type Store interface {
+	New(*Todo) error
 }
 
-func NewTodoHandler(db *gorm.DB) *TodoHandler {
-	return &TodoHandler{db: db}
+type TodoHandler struct {
+	db    *gorm.DB
+	store Store
+}
+
+func NewTodoHandler(db *gorm.DB, store Store) *TodoHandler {
+	return &TodoHandler{db: db, store: store}
 }
 
 func (t *TodoHandler) NewTask(c *gin.Context) {
@@ -41,8 +47,10 @@ func (t *TodoHandler) NewTask(c *gin.Context) {
 		return
 	}
 
-	r := t.db.Create(&todo)
-	if err := r.Error; err != nil {
+	if t.store == nil {
+		log.Panic("!!!!!")
+	}
+	if err := t.store.New(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

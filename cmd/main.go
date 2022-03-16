@@ -18,6 +18,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/havebit/hexagonal/app/todo"
+	"github.com/havebit/hexagonal/store"
 )
 
 var (
@@ -32,17 +33,19 @@ func main() {
 	}
 	defer os.Remove("/tmp/live")
 
-	err = godotenv.Load("local.env")
+	err = godotenv.Load(".env")
 	if err != nil {
 		log.Printf("please consider environment variables: %s\n", err)
 	}
 
-	db, err := gorm.Open(sqlite.Open(os.Getenv("DB_CONN")), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(os.Getenv("DSN")), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&todo.Todo{})
+	if err := db.AutoMigrate(&todo.Todo{}); err != nil {
+		log.Println(err)
+	}
 
 	r := gin.Default()
 	config := cors.DefaultConfig()
@@ -67,7 +70,8 @@ func main() {
 		})
 	})
 
-	handler := todo.NewTodoHandler(db)
+	handler := todo.NewTodoHandler(db, store.NewDB(db))
+
 	r.POST("/todos", handler.NewTask)
 	r.GET("/todos", handler.List)
 	r.DELETE("/todos/:id", handler.Remove)

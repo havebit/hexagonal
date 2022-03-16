@@ -9,9 +9,8 @@ build:
 		-X main.buildtime=`date "+%Y-%m-%dT%H:%M:%S%Z:00"`" \
 		-o app cmd/main.go
 
-maria:
-	docker run -p 127.0.0.1:3306:3306  --name some-mariadb \
-	-e MARIADB_ROOT_PASSWORD=my-secret-pw -e MARIADB_DATABASE=myapp -d mariadb:latest
+db:
+	docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=myapp -d postgres
 
 image:
 	docker build -t todo:test -f Dockerfile .
